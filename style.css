@@ -1,0 +1,138 @@
+:root{  /* Criação de variáveis cores */
+    font-size: 16px; /*  Já vem por padrão */
+    --royal-blue-light: #404eed;
+    --royal-blue-dark: #3946d4;
+    --white: #fff;
+    --background: #e2e3e9;
+}
+
+ /*  Resetando margem e espaçamento interno */
+* { /*  Propriedade atribuídas a todas as partes do HTML */
+margin: 0;
+padding: 0;
+box-sizing: border-box; /*  Essa propriedade é usada para que seja de fato definida a altura do header em 75px, pois quando foi definido o calculo responsivo da altura do header, o html tem o comportamento de somar a altura com margem e padding de cima e abaixo, por isso sem essa propriedade a altura fica em 107px, pois ele soma os 75px de altura, com mais os 32px sendo 16px do padding cima e 16px do padding baixo */
+}
+
+body{ /*  Configurações visuais iniciais */
+    font-family: -apple-system,
+    system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background: var(--background);
+}
+
+a{
+    color: var(--white);
+    text-decoration: none;
+}
+
+.header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--royal-blue-light);
+    height: 4.6875rem; /*  Aqui é a definição da altura de forma responsiva para 75px, para isso dividimos o 75 por 16 que é o meu valor de 1 rem e o valor responsivo será de 4.6875 em rem */
+    padding: 1rem; /*  Sempre melhor usar rem para ajudar quem possui problemas visuais */
+}
+
+.logo{
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.menu{
+    list-style: none; /*  Retira as bolinhas dos links */
+    display: flex;
+    gap: 0.5rem; /*  Espaçamento entre os links com distância de 8px, pois se 1rem vale 16px, sua metade (0.5rem) é igual a 8px */
+}
+
+.menu a{
+    display: block;
+    padding: 1rem; /*  Desta forma a area clicavel fica maior, facilitando quem utiliza o site pelo celular */
+    border-radius: 0.5rem;
+}
+
+.menu a:hover{
+    background: var(--royal-blue-dark);
+}
+
+.label-menu,
+.checkbox{
+    display: none; /*  Esconde a label 'Menu' e o 'checkbox' do header */
+}
+
+@media (max-width: 600px){ /*  Caso a tela tenha tamanho de até 600px (um celular), os comandos abaixo serão aplicados */
+   
+    .menu{
+      /* display: none; /*  o Menu dos links será escondido, porém a propriedade transition não irá funcionar */
+         display: block; /* Retiramos o display none e colocamos display block somente para vizualizar como ficaria o menu, depois voltamos para display none, porém a propriedade transition só funciona se o menu já existir, por isso voltamos a deixar como display block */
+         position: absolute; /*  Utilizamos essa propriedade para colocar o menu logo abaixo do cabeçalho, pois essa propriedade tira o elemento do fluxo normal  do HTML e deixa ele absoluto */
+         /*  Position absolute permite a movimentação das 4 direções, neste caso usaremos apena top e left */
+         top: 4.6875rem; /*  Em relação a altura do header */
+         left: 0;
+         background: var(--royal-blue-light);
+         text-align: center;
+         /*  Quando um item de bloco possui position absolute, ele perde a sua largura de ponta a ponta, o que permite definirmos uma largura de 100% */
+        width: 100%;
+        height: 0;
+        z-index: 1; /*  Aqui permitimos que o menu fique por cima do body */
+        visibility: hidden; /*  Precisamos usar essa propriedade para esconder os links do menu, pois sem isso mesmo com o menu fechado, os links ficarão visíveis */
+        overflow-y: hidden; /*  Essa propriedade garante que quando o menu for acionado, os links não transbordem para fora da tela no eixo y antes do menu abrir totalmente, da mesma forma funciona ao recolher o menu */
+        transition: 0.5s; /*  Tempo de transição para abrir o menu, mas só irá funcionar se já foi checado, ou seja, se ele ainda for display none (invisível) a transição não ocorrerá*/
+    }
+
+    .menu a{
+        padding: 1rem 0; /*  Retiramos os paddings da esquerda e direita e deixamos apenas em cima e em baixo */
+        margin-inline: 1rem; /*  Margem apenas nos lados */
+        border-bottom: 0.0625rem solid rgba(0, 0, 0, 0.16); /*  A borda representa 1px */
+        border-radius: 0; /*  Remover o border radius */
+    }
+
+    .label-menu{
+        display: flex; /*  Utiliza-se essa propriedade, pois um outro ícone de 'Hamburger' será adicionado ao lado de menu  */
+        align-items: center;
+        gap: 0.5rem; /*  Igual a 8px */
+        color: var(--white);
+        padding-block: 1rem; /*  Faz o espaçamento ser somente para cima e para baixo */
+        cursor: pointer;
+    }
+
+    .hamburger{ /*  Criando o ícone de hamburguer ao lado do 'Menu' */
+        border-top: 0.125rem solid; /*  Igual a 2px */
+        width: 1.25rem; /*  Igual a 20px */
+    }
+
+    /*  Agora para as demais linhas, vamos trabalhar com pseudo-elementos */
+    .hamburger::before,
+    .hamburger::after{
+        content: " ";
+        display: block; /*  Usamos display block, porque por padrão ele vem inline */
+        width: 1.25rem;
+        height: 0.125rem;
+        background: currentColor; /*  Representa cor atual herdada que no caso é branca */
+        margin-top: 0.3125rem;
+        position: relative; /*  Propriedade necessária para que funcione a tranformação do hamburger em X quando checked for ativo */
+        transition: 0.3s; /*  Isso permite que a transição das formas Hamburger e X sejam suavizadas */
+    }
+
+    /*  Essa Parte é importante, trata sobre aparecer e desaparecer o menu ao clicar. (LEIA) Aqui usamos uma pseudo-class com o css, pseudo-class se refere ao estado de um elemento, no css existe uma pseudo classe chamada 'checked', logo podemos selecionar o nosso 'checkbox' e quando ele estiver checado (quando for clicado), ele falará com o 'menu' que vem em seguida dele no HTML, para isso usamos o "seletor de irmãos gerais" que é representado pelo acento ~ (tio), esse seletor irá corresponder ao elemento '.menu' que vem em seguida mas não necessariamente imediatamente de um elemento '.checkbox' checado (checked) dentro de um mesmo elemento pai no HTML. Mesmo que o input do checkbox esteja escondido, o usuário clicará na 'label menu hamburger' sem perceber ele passa a 'checar' o input escondido, então uma vez clicado, ele mudará de display none para block e aparecerá na tela */
+    .checkbox:checked ~ .menu{
+        height: calc(100vh - 4.6875rem); /*  Aqui definimos uma altura, onde 100vh representa o total - a altura do header, caso não subtraia a altura do header, essa altura total ultrapassaria a tela, pois nos temos um top nesse menu, a altura sairá de 0 para 100vh - 4.6875rem, pois na altura normal do menu na classe menu lá em cima, foi definida a altura 0 */
+        visibility: visible; /*  Agora que o menu está ativo, habilitamos a visibilidade dos links */
+        overflow-y: auto; /*  Aqui garantimos que mesmo que a lista de links seja muito grande, o usuário conseguirá usar o scroll para descer a tela e visualizar todos os links */
+    }
+
+    /*  Agora vamos fazer o ícone de hamburger virar um 'X' quando o menu estiver aberto */
+    /*  (LEIA) Vamos pensar antes de fazer isso. Quando o checkbox estiver checado, nós vamos falar com a label que vem em seguida dele no HTML e especicamente com o <span hamburger dentro dela>, por isso segue a localização para estilização abaixo */
+
+    .checkbox:checked ~ .label-menu .hamburger{
+        border-top-color: transparent;
+    }
+
+    .checkbox:checked ~ .label-menu .hamburger::before{
+        transform: rotate(135deg);
+    }
+
+    .checkbox:checked ~ .label-menu .hamburger::after{
+        transform: rotate(-135deg);
+        top: -0.4375rem; /*  Só irá funcionar se nos pseudo elementos before e after for utilizado o position relative */
+    }
+}
